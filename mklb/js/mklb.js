@@ -8,13 +8,19 @@ const svgIcons = {
     prev: '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 477.175 477.175" xml:space="preserve"><g><path d="M145.188,238.575l215.5-215.5c5.3-5.3,5.3-13.8,0-19.1s-13.8-5.3-19.1,0l-225.1,225.1c-5.3,5.3-5.3,13.8,0,19.1l225.1,225c2.6,2.6,6.1,4,9.5,4s6.9-1.3,9.5-4c5.3-5.3,5.3-13.8,0-19.1L145.188,238.575z"/></g></svg>'
 }
 
-let mklbItems = document.getElementsByClassName('mklbItem');
 let lightboxContainer;
 
+// declare a variable to auto-initialize
+if (typeof _mklbAutoInit !== 'undefined') {
+    _mklbInit(document);
+}
 
-for (let i=0; i< mklbItems.length; i++) {
-    let mklbItem = mklbItems[i];
-    mklbItem.addEventListener('click', () => _mklbOpen(mklbItem));
+function _mklbInit(parent) {
+    let mklbItems = parent.getElementsByClassName('mklbItem');
+    for (let i=0; i< mklbItems.length; i++) {
+        let mklbItem = mklbItems[i];
+        mklbItem.addEventListener('click', () => _mklbOpen(mklbItem));
+    }
 }
 
 function _mklbOpen(mklbItem) {
@@ -68,11 +74,12 @@ function _mklbAddGallery(currentItem) {
     let mklbInner = document.createElement('div');
     mklbInner.id = 'mklbInner';
 
+    let mklbItems = document.getElementsByClassName('mklbItem');
     for (let i=0; i < mklbItems.length; i++) {
-        if('gallery' in mklbItems[i].dataset) {
+        if('gallery' in mklbItems[i].dataset && mklbItems[i].dataset.gallery === currentItem.dataset.gallery) {
             gallery.push(mklbItems[i]);
             if(mklbItems[i] === currentItem) {
-                index = i;
+                index = gallery.length-1;
             }
             let imageContainer = document.createElement('section');
             imageContainer.className = 'imageContainer';
@@ -81,7 +88,7 @@ function _mklbAddGallery(currentItem) {
         };
     }
 
-    mklbInner.style.marginLeft = (index-1) * (-100) + 'vw';
+    mklbInner.style.marginLeft = (index) * (-100) + 'vw';
     lightboxContainer.appendChild(mklbInner);
 
     let prev = document.createElement('div');
